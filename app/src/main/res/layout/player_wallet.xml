@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/tikal_pyramind">
+
+    <Button
+        android:id="@+id/to_bank"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="300dp"
+        android:text="Sent to Bank" />
+
+
+    <GridView
+        android:id="@+id/GV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+
+        android:horizontalSpacing="10dp"
+        android:listSelector="@drawable/selector"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp" />
+
+
+
+
+
+</RelativeLayout>
+

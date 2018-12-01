@@ -1,9 +1,15 @@
 package com.example.jiaozihang.coinz
 
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
+import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat.*
 import android.util.Log
 import android.widget.Toast
 import com.mapbox.android.core.location.LocationEngine
@@ -12,12 +18,9 @@ import com.mapbox.android.core.location.LocationEnginePriority
 import com.mapbox.android.core.location.LocationEngineProvider
 import com.mapbox.android.core.permissions.PermissionsListener
 import com.mapbox.android.core.permissions.PermissionsManager
-import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
-import com.mapbox.geojson.Point
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.Mapbox
-import com.mapbox.mapboxsdk.Mapbox.*
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -26,12 +29,8 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.plugins.locationlayer.LocationLayerPlugin
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
-import kotlinx.android.synthetic.main.activity_second.*
 import kotlinx.android.synthetic.main.activity_third.*
-import kotlinx.android.synthetic.main.activity_third.view.*
-import java.net.URL
-
-
+import com.mapbox.mapboxsdk.annotations.IconFactory
 
 class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineListener, OnMapReadyCallback {
 
@@ -43,7 +42,9 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
     private lateinit var locationEngine: LocationEngine
     private lateinit var locationLayerPlugin: LocationLayerPlugin//work with locationEngine to give a UI display to user
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         val bundle: Bundle? = intent.extras
         val msg = bundle!!.getString("user_message")
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
@@ -56,7 +57,46 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
         mapView?.getMapAsync(this)
         DownloadFileTask(DownloadCompleteRunner).execute("http://homepages.inf.ed.ac.uk/stg/coinz/2018/10/03/coinzmap.geojson")
 
+        collect.setOnClickListener {
 
+            coins.pickupcoins(originLocation)
+            map!!.clear()
+            for ( i in 0 .. (coins.the_coin.size -1)){
+                val lati1 = coins.the_coin[i].latitude
+                val long1 = coins.the_coin[i].longitude
+                val cur1 = coins.the_coin[i].currency
+                val value1 =coins.the_coin[i].the_value
+
+                val iconfrog = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_frog))
+                val iconlizard = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_lizard))
+                val iconturtle = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_turtle))
+                val iconcrocodile = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_crocodile_))
+
+
+                if(cur1 == "\"SHIL\"") {
+                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1).position(LatLng(lati1, long1)).icon(iconfrog))
+                }
+                if(cur1 == "\"DOLR\""){
+                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1).position(LatLng(lati1, long1)).icon(iconlizard))
+                }
+                if(cur1 == "\"QUID\""){
+                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1).position(LatLng(lati1, long1)).icon(iconturtle))
+                }
+                if(cur1 == "\"PENY\""){
+                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1).position(LatLng(lati1, long1)).icon(iconcrocodile))
+                }
+            }
+
+            if(coins.wallet.size == 100) {
+                Toast.makeText(this, "your wallet is full, store some coins in to the bank!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+        wallet.setOnClickListener{
+            val intent = Intent(this,WalletActivity::class.java)
+            startActivity(intent)
+        }
 
 
     }
@@ -80,6 +120,8 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
         } else {
             originLocation = location
             setCameraPosition(originLocation)
+
+
         }
     }
 
@@ -99,14 +141,41 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
             enableLocation()
         }
 
-        print ((DownloadCompleteRunner.result))
 
         for ( i in  FeatureCollection.fromJson(DownloadCompleteRunner.result).features()!!){
-            val p2 = i.geometry().toString().substringAfter("[").substringBefore(",").toDouble()
-            val p1 = i.geometry().toString().substringAfter("[").substringAfter(",").substringBefore("]").toDouble()
+            val long = i.geometry().toString().substringAfter("[").substringBefore(",").toDouble()
+            val lati = i.geometry().toString().substringAfter("[").substringAfter(",").substringBefore("]").toDouble()
             val cur = i.properties()!!["currency"].toString()
             val value = i.properties()!!["value"].toString()
-            map!!.addMarker(MarkerOptions().title(cur).snippet(value).position(LatLng(p1,p2)))
+            val ID = i.properties()!!["id"].toString()
+
+
+            val loc = Location("")
+            loc.latitude = lati
+            loc.longitude = long
+
+            coins.the_coin.add(Coin(cur,value,lati,long,loc,ID))
+            val iconfrog = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_frog))
+            val iconlizard = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_lizard))
+            val iconturtle = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_turtle))
+            val iconcrocodile = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_crocodile_))
+
+
+
+
+            if(cur == "\"SHIL\"") {
+                map!!.addMarker(MarkerOptions().title(cur).snippet(value).position(LatLng(lati, long)).icon(iconfrog))
+            }
+            if(cur == "\"DOLR\""){
+                map!!.addMarker(MarkerOptions().title(cur).snippet(value).position(LatLng(lati, long)).icon(iconlizard))
+            }
+            if(cur == "\"QUID\""){
+                map!!.addMarker(MarkerOptions().title(cur).snippet(value).position(LatLng(lati, long)).icon(iconturtle))
+            }
+            if(cur == "\"PENY\""){
+                map!!.addMarker(MarkerOptions().title(cur).snippet(value).position(LatLng(lati, long)).icon(iconcrocodile))
+            }
+
         }
 
     }
@@ -117,7 +186,6 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
             initialiseLocationEngine()
             initialiseLocationLayer()
         } else {
-            Log.d(tag, "Permissions are not granted")
             permissionManager = PermissionsManager(this)
             permissionManager.requestLocationPermissions(this)
         }
@@ -146,10 +214,8 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
     @SuppressWarnings("MissingPermission")
     private fun initialiseLocationLayer() {
         if (mapView == null) {
-            Log.d(tag, "mapView is null")
         } else {
             if (map == null) {
-                Log.d(tag, "map is null")
             } else {
                 locationLayerPlugin = LocationLayerPlugin(mapView!!, map!!, locationEngine)
                 locationLayerPlugin.apply {
@@ -160,6 +226,21 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
             }
         }
     }
+    private fun getBitmapFromVectorDrawable(context : Context, drawableId : Int): Bitmap {
+    var drawable = ContextCompat.getDrawable(context, drawableId)!!
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        drawable = (wrap(drawable)).mutate()
+    }
+
+    var bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+            drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888)
+    var canvas =  Canvas(bitmap)
+    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
+    drawable.draw(canvas)
+
+    return bitmap
+}
+
 
     private fun setCameraPosition(location: Location) {
         val latlng = LatLng(location.latitude, location.longitude)
@@ -170,6 +251,8 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
         super.onStart()
         mapView?.onStart()
     }
+
+
 
 
 }
