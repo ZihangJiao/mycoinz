@@ -13,7 +13,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
+import android.view.View.OnClickListener
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.register.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,29 +27,23 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var loginBtn = findViewById<View>(R.id.loginBtn) as Button
-        loginBtn.setOnClickListener(View.OnClickListener{
-            view -> login()
+        val loginBtn = findViewById<View>(R.id.loginBtn) as Button
+        val regTxt = findViewById<View>(R.id.regTxt) as TextView
 
-        })
+        loginBtn.setOnClickListener ((View.OnClickListener { view -> login() }))
+
+        regTxt.setOnClickListener((View.OnClickListener {view -> register()}))
 
     }
 
-
-    override fun onStart() {
-        super.onStart()
-        if(mAuth.currentUser == null){
-            startActivity(Intent(this,PhoneAuthCredential::class.java))
-        }else{
-            Toast.makeText(this,"Already signed in:)",Toast.LENGTH_LONG).show()
-        }
+    private fun register(){
+        startActivity((Intent(this,Register::class.java)))
     }
-
-
 
 
 
     private fun login(){
+
         val emailTxt = findViewById<View>(R.id.emailTxt) as EditText
         val passwordTXT = findViewById<View>(R.id.passwordTxt) as EditText
 
@@ -54,12 +51,13 @@ class MainActivity : AppCompatActivity() {
         var password = passwordTXT.text.toString()
 
         if(!email.isEmpty() && !password.isEmpty()){
-            mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, OnCompleteListener { task ->
-                if(task.isSuccessful){
-                    startActivity(Intent(this,SecondActivity::class.java))
-                    Toast.makeText(this,"Successfully logged in :)", Toast.LENGTH_LONG).show()
+            mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(this, { task ->
+                if (task.isSuccessful) {
+                    startActivity(Intent(this, SecondActivity::class.java))
+                    Toast.makeText(this, "Successfully logged in :)", Toast.LENGTH_LONG).show()
                 }
             })
+
         }else{
             Toast.makeText(this,"Please fill up the credentials :(",Toast.LENGTH_LONG).show()
         }

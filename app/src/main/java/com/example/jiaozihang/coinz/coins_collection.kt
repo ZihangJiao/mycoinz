@@ -2,6 +2,8 @@ package com.example.jiaozihang.coinz
 
 import android.location.Location
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 
 object coins{
@@ -9,11 +11,12 @@ object coins{
     var the_coin = ArrayList<Coin>()
     var pick_distance = 5000
     var wallet = ArrayList<Coin>()
-    var Bank = ArrayList<Coin>()
+    var Bank = 0.00
     var temporary_list = ArrayList<Coin>()
     var coins_to_remove = ArrayList<Coin>()
     var count = 50
-
+    val mAuth = FirebaseAuth.getInstance()
+    val user = mAuth.currentUser
 
     fun pickupcoins(loc:Location){
         Log.d("distance", the_coin.size.toString())
@@ -29,6 +32,14 @@ object coins{
         }
 
         coins_to_remove.isEmpty()
+
+        for(i in 0 .. (wallet.size-1)){
+            FirebaseDatabase.getInstance().getReference("users")
+                    .child(this.user!!.uid)
+                    .child("wallet")
+                    .child("CoinNo" + (i+1).toString())
+                    .setValue(wallet.get(i))
+        }
     }
 
 
@@ -38,7 +49,7 @@ object coins{
             for(k in wallet){
                 if(i.id == k.id){
                     coins_to_remove.add(k)
-                    Bank.add(k)
+//                    Bank.add(k)
                     count -= 1
                     Log.d("checkcrocodile", coins_to_remove.size.toString())
                 }
@@ -46,9 +57,26 @@ object coins{
         }
         for(i in coins_to_remove){
             Log.d("checkcrocodile",coins.wallet.size.toString())
+            if(i.currency == "\"PENY\"" ){
+                Bank += (i.the_value.toDouble() * 32.393996378130524)
+            }else if(i.currency == "\"QUID\"" ){
+                Bank += (i.the_value.toDouble() * 6.332861915771016)
+            }else if(i.currency == "\"DOLR\""){
+                Bank += (i.the_value.toDouble() * 29.64763865293904)
+            }else if(i.currency == "\"SHIL\"" ){
+                Bank += (i.the_value.toDouble() *  24.702404151790425)
+            }
             wallet.remove(i)
         }
         coins_to_remove.clear()
+
+        for(i in 0 .. (wallet.size-1)){
+            FirebaseDatabase.getInstance().getReference("users")
+                    .child(this.user!!.uid)
+                    .child("wallet")
+                    .child("CoinNo" + (i+1).toString())
+                    .setValue(wallet.get(i))
+        }
     }
 
 

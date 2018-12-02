@@ -12,9 +12,8 @@
         android:id="@+id/loginBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="126dp"
-        android:layout_marginBottom="64dp"
-        android:text="I am ready!!"
+        android:layout_marginStart="260dp"
+        android:text="Login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -26,7 +25,7 @@
         android:layout_marginBottom="44dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="insert your email"
+        android:hint="insert your email"
         app:layout_constraintBottom_toTopOf="@+id/passwordTxt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,22 +37,19 @@
         android:layout_marginBottom="48dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="insert your password"
+        android:hint="insert your password"
         app:layout_constraintBottom_toTopOf="@+id/loginBtn"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/usernameTxt"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/regTxt"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="155dp"
-        android:layout_marginBottom="76dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintBottom_toTopOf="@+id/emailTxt"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="48dp"
+        android:text="register"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordTxt" />
 
 
 </android.support.constraint.ConstraintLayout>
