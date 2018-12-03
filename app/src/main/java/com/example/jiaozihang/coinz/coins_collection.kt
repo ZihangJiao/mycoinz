@@ -14,7 +14,7 @@ object coins{
     var Bank = 0.00
     var temporary_list = ArrayList<Coin>()
     var coins_to_remove = ArrayList<Coin>()
-    var count = 50
+    var count = 25
     val mAuth = FirebaseAuth.getInstance()
     val user = mAuth.currentUser
 
@@ -56,27 +56,40 @@ object coins{
             }
         }
         for(i in coins_to_remove){
-            Log.d("checkcrocodile",coins.wallet.size.toString())
+            Log.d("checkcrocodile",i.the_value)
             if(i.currency == "\"PENY\"" ){
-                Bank += (i.the_value.toDouble() * 32.393996378130524)
+                Bank += (i.the_value.drop(1).dropLast(1).toDouble() * 32.393996378130524)
             }else if(i.currency == "\"QUID\"" ){
-                Bank += (i.the_value.toDouble() * 6.332861915771016)
+                Bank += (i.the_value.drop(1).dropLast(1).toDouble() * 6.332861915771016)
             }else if(i.currency == "\"DOLR\""){
-                Bank += (i.the_value.toDouble() * 29.64763865293904)
+                Bank += (i.the_value.drop(1).dropLast(1).toDouble() * 29.64763865293904)
             }else if(i.currency == "\"SHIL\"" ){
-                Bank += (i.the_value.toDouble() *  24.702404151790425)
+                Bank += (i.the_value.drop(1).dropLast(1).toDouble() *  24.702404151790425)
             }
             wallet.remove(i)
         }
         coins_to_remove.clear()
 
+
+        FirebaseDatabase.getInstance().getReference("users")
+                .child(this.user!!.uid)
+                .child("wallet").removeValue()
+
         for(i in 0 .. (wallet.size-1)){
+
             FirebaseDatabase.getInstance().getReference("users")
                     .child(this.user!!.uid)
                     .child("wallet")
                     .child("CoinNo" + (i+1).toString())
                     .setValue(wallet.get(i))
         }
+        FirebaseDatabase.getInstance().getReference("users")
+                .child(this.user!!.uid)
+                .child("bank").removeValue()
+
+        FirebaseDatabase.getInstance().getReference("users")
+                .child(this.user!!.uid)
+                .child("bank").setValue(Bank.toString())
     }
 
 

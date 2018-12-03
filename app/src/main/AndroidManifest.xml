@@ -35,9 +35,10 @@
         <activity android:name=".WalletActivity_frog" />
         <activity android:name=".WalletActivity_lizard" />
         <activity android:name=".Register" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+        <activity android:name=".Bank" />
+        <!--<activity-->
+            <!--android:name=".LoginActivity"-->
+            <!--android:label="@string/title_activity_login"></activity>-->
     </application>
 
 </manifest>

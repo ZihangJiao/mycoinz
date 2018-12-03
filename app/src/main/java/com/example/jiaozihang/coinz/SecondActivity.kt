@@ -5,27 +5,37 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_second.*
+import kotlinx.android.synthetic.main.the_wallet.*
 
 class SecondActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
-
-        Startbutton.setOnClickListener{
-            if(!UserName.text.toString().equals("")) {
-                val hellomessage: String = "Hello " + UserName.text.toString()
-                Toast.makeText(this, hellomessage, Toast.LENGTH_SHORT).show()
-
+        image_Map.setOnClickListener{
             val intent = Intent(this,ThirdActivity::class.java)
-            intent.putExtra("user_message",hellomessage)
             startActivity(intent)
-        }else{
-                Toast.makeText(this, "Come on, think a cool name for yourself !", Toast.LENGTH_SHORT).show()
-            }
+        }
 
+        image_moneybag.setOnClickListener{
+            val intent = Intent(this,WalletActivity::class.java)
+            startActivity(intent)
+        }
+
+        image_bank.setOnClickListener{
+            val intent = Intent(this,Bank::class.java)
+            startActivity(intent)
+        }
+
+        image_logout.setOnClickListener{
+            finish()
         }
     }
 
+    override fun onBackPressed() {
 
-}
+        // super.onBackPressed(); // Comment this super call to avoid calling finish() or fragmentmanager's backstack pop operation.
+    }
+    }
+
+

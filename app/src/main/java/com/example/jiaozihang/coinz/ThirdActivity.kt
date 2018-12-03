@@ -46,8 +46,6 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
     override fun onCreate(savedInstanceState: Bundle?) {
 
         val bundle: Bundle? = intent.extras
-        val msg = bundle!!.getString("user_message")
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_third)
@@ -90,12 +88,6 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
             if(coins.wallet.size == 100) {
                 Toast.makeText(this, "your wallet is full, store some coins in to the bank!", Toast.LENGTH_SHORT).show()
             }
-        }
-
-
-        wallet.setOnClickListener{
-            val intent = Intent(this,WalletActivity::class.java)
-            startActivity(intent)
         }
 
 

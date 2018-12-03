@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rainforest"
+    android:background="@drawable/forest"
     android:orientation="vertical"
     android:weightSum="10"
     tools:context=".SecondActivity"
@@ -12,7 +12,7 @@
 
 
     <ImageButton
-        android:id="@+id/Map"
+        android:id="@+id/image_Map"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:background="@null"
@@ -25,34 +25,34 @@
         android:gravity="center">
 
         <ImageButton
-            android:id="@+id/imageButtonTurtle"
+            android:id="@+id/image_moneybag"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:layout_marginRight="50dp"
             android:adjustViewBounds="true"
             android:background="@null"
             android:padding="5dp"
             android:scaleType="fitCenter"
-            android:layout_marginRight="50dp"
             android:src="@drawable/money_bag" />
 
         <ImageButton
-            android:id="@+id/imageButtonLizard"
+            android:id="@+id/image_bank"
             android:layout_width="150dp"
             android:layout_height="150dp"
+            android:layout_marginLeft="50dp"
             android:background="@null"
             android:scaleType="fitCenter"
-            android:layout_marginLeft="50dp"
-            android:src="@drawable/lizardcoin" />
+            android:src="@drawable/bank" />
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/imageButtonCrocodile"
+        android:id="@+id/image_logout"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:adjustViewBounds="true"
         android:background="@null"
         android:padding="5dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/crocodilecoin" />
+        android:src="@drawable/logout" />
 
 </LinearLayout>
