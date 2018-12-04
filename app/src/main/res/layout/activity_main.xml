@@ -39,6 +39,7 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="insert your password"
+        android:password="true"
         app:layout_constraintBottom_toTopOf="@+id/loginBtn"
         app:layout_constraintStart_toStartOf="parent" />
 

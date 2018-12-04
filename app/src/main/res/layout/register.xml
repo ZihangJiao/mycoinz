@@ -17,8 +17,8 @@
         android:layout_marginTop="276dp"
         android:layout_marginBottom="44dp"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="insert your email"
+        android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/passwordTxt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,6 +32,7 @@
         android:ems="10"
         android:hint="insert your password"
         android:inputType="textPersonName"
+        android:password="true"
         app:layout_constraintBottom_toTopOf="@+id/regBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +50,8 @@
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/emailTxt"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6" />
 
     <Button
         android:id="@+id/regBtn"

@@ -1,5 +1,6 @@
 package com.example.jiaozihang.coinz
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -19,6 +20,11 @@ class WalletActivity_lizard :AppCompatActivity(){
         GV?.adapter = adapter
 
         addbutton()
+
+        send_gift.setOnClickListener{
+            val intent = Intent(this,trade::class.java)
+            startActivity(intent)
+        }
     }
     fun addbutton() {
         to_bank.setOnClickListener {
@@ -64,4 +70,10 @@ class WalletActivity_lizard :AppCompatActivity(){
 
             return item_liste
         }
+
+    public override fun onRestart() {
+        super.onRestart()
+        finish()
+        startActivity(intent)
+    }
 }

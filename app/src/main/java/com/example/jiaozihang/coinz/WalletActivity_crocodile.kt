@@ -22,6 +22,11 @@ class WalletActivity_crocodile:AppCompatActivity() {
 
         addbutton()
 
+        send_gift.setOnClickListener{
+            val intent = Intent(this,trade::class.java)
+            startActivity(intent)
+        }
+
 
     }
 
@@ -72,6 +77,12 @@ class WalletActivity_crocodile:AppCompatActivity() {
             return item_liste
 
         }
+
+    public override fun onRestart() {
+        super.onRestart()
+        finish()
+        startActivity(intent)
+    }
 
 
 

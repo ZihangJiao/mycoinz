@@ -1,7 +1,6 @@
 package com.example.jiaozihang.coinz
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Location
@@ -31,6 +30,9 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 import kotlinx.android.synthetic.main.activity_third.*
 import com.mapbox.mapboxsdk.annotations.IconFactory
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineListener, OnMapReadyCallback {
 
@@ -53,7 +55,18 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
         mapView = findViewById(R.id.mapboxMapView)
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
-        DownloadFileTask(DownloadCompleteRunner).execute("http://homepages.inf.ed.ac.uk/stg/coinz/2018/10/03/coinzmap.geojson")
+
+        var Month = LocalDateTime.now().monthValue.toString()
+            if(Month.length == 1){
+                Month = "0"+Month
+            }
+        var Date = LocalDate.now().dayOfMonth.toString()
+            if(Date.length == 1){
+                Date = "0" + Date
+            }
+
+        DownloadFileTask(DownloadCompleteRunner).execute("http://homepages.inf.ed.ac.uk/stg/coinz/"+LocalDate.now().year.toString()+"/"+Month+"/"+Date+"/coinzmap.geojson")
+
 
         collect.setOnClickListener {
 
@@ -140,17 +153,33 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
             val cur = i.properties()!!["currency"].toString()
             val value = i.properties()!!["value"].toString()
             val ID = i.properties()!!["id"].toString()
+            var checker = 0
 
+           Log.d("check1",coins.coin_collected_today.size.toString())
+            for(i in coins.coin_collected_today){
+                if (i == ID){
+                    checker = 1
+                    break
+                }
+            }
+
+            if(checker == 1){
+                checker = 0
+                continue
+            }
+
+            Log.d("check1","whatttt")
 
             val loc = Location("")
             loc.latitude = lati
             loc.longitude = long
 
-            coins.the_coin.add(Coin(cur,value,lati,long,loc,ID))
+            coins.the_coin.add(Coin(cur,value,lati,long,ID))
             val iconfrog = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_frog))
             val iconlizard = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_lizard))
             val iconturtle = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_turtle))
             val iconcrocodile = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_crocodile_))
+
 
 
 

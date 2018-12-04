@@ -9,21 +9,32 @@ import com.google.firebase.database.FirebaseDatabase
 object coins{
 
     var the_coin = ArrayList<Coin>()
-    var pick_distance = 5000
+    var pick_distance = 900
     var wallet = ArrayList<Coin>()
     var Bank = 0.00
     var temporary_list = ArrayList<Coin>()
     var coins_to_remove = ArrayList<Coin>()
-    var count = 25
+    var count = 100
     val mAuth = FirebaseAuth.getInstance()
     val user = mAuth.currentUser
+    val coin_collected_today = ArrayList<String>()
+
 
     fun pickupcoins(loc:Location){
         Log.d("distance", the_coin.size.toString())
         for(i in the_coin){
-            if ((loc.distanceTo(i.location) < pick_distance) && (wallet.size < 100)){
+            var Location = Location("")
+            Location.longitude = i.longitude
+            Location.latitude = i.latitude
+            if ((loc.distanceTo(Location) < pick_distance) && (wallet.size < 100)){
                 wallet.add(i)
                 coins_to_remove.add(i)
+
+                FirebaseDatabase.getInstance().getReference("users")
+                        .child(this.user!!.uid)
+                        .child("coin_collected_today")
+                        .child("CoinNo" + i.id)
+                        .setValue(i.id)
             }
         }
 
@@ -49,14 +60,11 @@ object coins{
             for(k in wallet){
                 if(i.id == k.id){
                     coins_to_remove.add(k)
-//                    Bank.add(k)
                     count -= 1
-                    Log.d("checkcrocodile", coins_to_remove.size.toString())
                 }
             }
         }
         for(i in coins_to_remove){
-            Log.d("checkcrocodile",i.the_value)
             if(i.currency == "\"PENY\"" ){
                 Bank += (i.the_value.drop(1).dropLast(1).toDouble() * 32.393996378130524)
             }else if(i.currency == "\"QUID\"" ){
@@ -89,9 +97,39 @@ object coins{
 
         FirebaseDatabase.getInstance().getReference("users")
                 .child(this.user!!.uid)
-                .child("bank").setValue(Bank.toString())
+                .child("bank").setValue(Bank)
     }
 
+    fun give_coins(userid :String){
+        coins_to_remove.clear()
+        for(i in temporary_list) {
+            for(k in wallet){
+                if(i.id == k.id){
+                    coins_to_remove.add(k)
+            }
+        }
+    }
+        Log.d("compare",userid)
+        for(i in coins_to_remove){
+            wallet.remove(i)
+            FirebaseDatabase.getInstance().getReference("users")
+                    .child(userid)
+                    .child("wallet")
+                    .child("gift"+i.id).setValue(i)
+        }
 
+        FirebaseDatabase.getInstance().getReference("users")
+                .child(this.user!!.uid)
+                .child("wallet").removeValue()
 
+        for(i in 0 .. (wallet.size-1)){
+
+            FirebaseDatabase.getInstance().getReference("users")
+                    .child(this.user!!.uid)
+                    .child("wallet")
+                    .child("CoinNo" + (i+1).toString())
+                    .setValue(wallet.get(i))
+        }
+
+}
 }
