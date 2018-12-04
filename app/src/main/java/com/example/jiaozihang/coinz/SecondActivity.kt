@@ -12,7 +12,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
-
+import java.time.LocalDate
 
 
 class SecondActivity : AppCompatActivity() {
@@ -25,8 +25,12 @@ class SecondActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
-
         initData()
+
+
+
+
+
 
         image_Map.setOnClickListener{
             val intent = Intent(this,ThirdActivity::class.java)
@@ -64,8 +68,10 @@ class SecondActivity : AppCompatActivity() {
 
 
 
+
         val walletListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                coins.wallet.clear()
                 for(i in dataSnapshot.children){
                     val coin_temp = i.getValue(Coin::class.java)
                     coins.wallet.add(coin_temp!!)
@@ -77,6 +83,37 @@ class SecondActivity : AppCompatActivity() {
                 println("loadPost:onCancelled ${databaseError.toException()}")
             }
         }
+
+
+
+
+        val last_date_listener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if(LocalDate.now().toString() != dataSnapshot.child("last_collecting_date").getValue(String::class.java)!!){
+                    coins.count = 25
+
+                    FirebaseDatabase.getInstance().getReference("users")
+                            .child(user!!.uid)
+                            .child("last_collecting_date")
+                            .removeValue()
+
+                    FirebaseDatabase.getInstance().getReference("users")
+                            .child(user!!.uid)
+                            .child("last_collecting_date")
+                            .setValue(LocalDate.now().toString())
+
+                }
+                else{
+                    coins.count = dataSnapshot.child("count").getValue(Int::class.java)!!
+                }
+
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("loadPost:onCancelled ${databaseError.toException()}")
+            }
+        }
+
 
 
 
@@ -95,14 +132,15 @@ class SecondActivity : AppCompatActivity() {
         }
 
 
-
         firebaseData.child("users").child(user!!.uid).addListenerForSingleValueEvent(bankListener)
-
 
         firebaseData.child("users").child(user!!.uid).child("wallet").addListenerForSingleValueEvent(walletListener)
 
+        firebaseData.child("users").child(user!!.uid).addListenerForSingleValueEvent(last_date_listener)
 
         firebaseData.child("users").child(user!!.uid).child("coin_collected_today").addListenerForSingleValueEvent(coin_today_Listener)
+
+
 
     }
 

@@ -50,6 +50,10 @@ class WalletActivity_turtle:AppCompatActivity (){
                 addbutton()
                 Log.d("checkthat", "no")
                 finish()
+
+                overridePendingTransition(0, 0)
+                startActivity(getIntent())
+                overridePendingTransition(0, 0)
             } else {
                 Toast.makeText(this, "Can't store for now!", Toast.LENGTH_SHORT).show()
 

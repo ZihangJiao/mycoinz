@@ -13,7 +13,7 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="300dp"
-        android:text="Sent to Bank" />
+        android:text="Sent Bank" />
 
     <Button
         android:id="@+id/send_gift"

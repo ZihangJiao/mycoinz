@@ -4,6 +4,8 @@ import android.location.Location
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 object coins{
@@ -18,6 +20,7 @@ object coins{
     val mAuth = FirebaseAuth.getInstance()
     val user = mAuth.currentUser
     val coin_collected_today = ArrayList<String>()
+    val date = LocalDateTime.now()
 
 
     fun pickupcoins(loc:Location){
@@ -51,10 +54,16 @@ object coins{
                     .child("CoinNo" + (i+1).toString())
                     .setValue(wallet.get(i))
         }
+
+
     }
 
 
     fun store_coins(){
+
+
+        Log.d("Finalcheck1", wallet.size.toString())
+
         coins_to_remove.clear()
         for(i in temporary_list) {
             for(k in wallet){
@@ -76,12 +85,14 @@ object coins{
             }
             wallet.remove(i)
         }
+        temporary_list.clear()
         coins_to_remove.clear()
 
 
         FirebaseDatabase.getInstance().getReference("users")
                 .child(this.user!!.uid)
                 .child("wallet").removeValue()
+        Log.d("Finalcheck", wallet.size.toString())
 
         for(i in 0 .. (wallet.size-1)){
 
@@ -98,6 +109,14 @@ object coins{
         FirebaseDatabase.getInstance().getReference("users")
                 .child(this.user!!.uid)
                 .child("bank").setValue(Bank)
+
+        FirebaseDatabase.getInstance().getReference("users")
+                .child(this.user!!.uid)
+                .child("count").removeValue()
+
+        FirebaseDatabase.getInstance().getReference("users")
+                .child(this.user!!.uid)
+                .child("count").setValue(count)
     }
 
     fun give_coins(userid :String){
@@ -130,6 +149,7 @@ object coins{
                     .child("CoinNo" + (i+1).toString())
                     .setValue(wallet.get(i))
         }
+        temporary_list.clear()
 
 }
 }

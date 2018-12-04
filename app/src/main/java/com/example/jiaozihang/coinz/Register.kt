@@ -12,8 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.internal.FirebaseAppHelper.getUid
-
-
+import java.time.LocalDate
 
 
 class Register : AppCompatActivity(){
@@ -53,7 +52,7 @@ class Register : AppCompatActivity(){
 
 
 
-                    val userDetails = user_cl(name, email)
+                    val userDetails = user_cl(name, email,0.0, LocalDate.now().toString(),"","",25)
                     FirebaseDatabase.getInstance().getReference("users")
                             .child(user.getUid())
                             .setValue(userDetails)

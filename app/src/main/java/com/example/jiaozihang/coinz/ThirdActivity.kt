@@ -56,6 +56,7 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
         mapView?.onCreate(savedInstanceState)
         mapView?.getMapAsync(this)
 
+
         var Month = LocalDateTime.now().monthValue.toString()
             if(Month.length == 1){
                 Month = "0"+Month
