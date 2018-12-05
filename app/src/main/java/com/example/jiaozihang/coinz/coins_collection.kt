@@ -2,6 +2,7 @@ package com.example.jiaozihang.coinz
 
 import android.location.Location
 import android.util.Log
+import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.time.LocalDate
@@ -16,12 +17,12 @@ object coins{
     var Bank = 0.00
     var temporary_list = ArrayList<Coin>()
     var coins_to_remove = ArrayList<Coin>()
-    var count = 100
+    var count = 25
     val mAuth = FirebaseAuth.getInstance()
     val user = mAuth.currentUser
     val coin_collected_today = ArrayList<String>()
     val date = LocalDateTime.now()
-
+    var victim_email = ""
 
     fun pickupcoins(loc:Location){
         Log.d("distance", the_coin.size.toString())
@@ -75,13 +76,13 @@ object coins{
         }
         for(i in coins_to_remove){
             if(i.currency == "\"PENY\"" ){
-                Bank += (i.the_value.drop(1).dropLast(1).toDouble() * 32.393996378130524)
+                Bank += (i.the_value.drop(1).dropLast(1).toDouble() * DownloadCompleteRunner.rate_peny)
             }else if(i.currency == "\"QUID\"" ){
-                Bank += (i.the_value.drop(1).dropLast(1).toDouble() * 6.332861915771016)
+                Bank += (i.the_value.drop(1).dropLast(1).toDouble() * DownloadCompleteRunner.rate_quid)
             }else if(i.currency == "\"DOLR\""){
-                Bank += (i.the_value.drop(1).dropLast(1).toDouble() * 29.64763865293904)
+                Bank += (i.the_value.drop(1).dropLast(1).toDouble() * DownloadCompleteRunner.rate_dolr)
             }else if(i.currency == "\"SHIL\"" ){
-                Bank += (i.the_value.drop(1).dropLast(1).toDouble() *  24.702404151790425)
+                Bank += (i.the_value.drop(1).dropLast(1).toDouble() * DownloadCompleteRunner.rate_shil)
             }
             wallet.remove(i)
         }
@@ -128,7 +129,6 @@ object coins{
             }
         }
     }
-        Log.d("compare",userid)
         for(i in coins_to_remove){
             wallet.remove(i)
             FirebaseDatabase.getInstance().getReference("users")

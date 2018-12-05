@@ -38,6 +38,11 @@
         <activity android:name=".Register" />
         <activity android:name=".Bank" />
         <activity android:name=".trade" />
+        <activity android:name=".robbery" />
+        <activity android:name=".robbery_buff" />
+        <activity android:name=".robbery_fail" />
+        <activity android:name=".robbery_success" />
+
         <!--<activity-->
             <!--android:name=".LoginActivity"-->
             <!--android:label="@string/title_activity_login"></activity>-->

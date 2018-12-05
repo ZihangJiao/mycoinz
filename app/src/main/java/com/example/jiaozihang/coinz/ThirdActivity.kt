@@ -30,6 +30,7 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 import kotlinx.android.synthetic.main.activity_third.*
 import com.mapbox.mapboxsdk.annotations.IconFactory
+import org.json.JSONObject
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -147,6 +148,10 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
             enableLocation()
         }
 
+        Log.d("Tag",DownloadCompleteRunner.rate_dolr.toString())
+        Log.d("Tag",DownloadCompleteRunner.rate_peny.toString())
+        Log.d("Tag",DownloadCompleteRunner.rate_quid.toString())
+        Log.d("Tag",DownloadCompleteRunner.rate_shil.toString())
 
         for ( i in  FeatureCollection.fromJson(DownloadCompleteRunner.result).features()!!){
             val long = i.geometry().toString().substringAfter("[").substringBefore(",").toDouble()
@@ -154,6 +159,10 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
             val cur = i.properties()!!["currency"].toString()
             val value = i.properties()!!["value"].toString()
             val ID = i.properties()!!["id"].toString()
+
+
+
+
             var checker = 0
 
            Log.d("check1",coins.coin_collected_today.size.toString())
