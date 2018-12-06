@@ -2,26 +2,22 @@ package com.example.jiaozihang.coinz
 
 import android.app.Activity
 import android.content.Context
-import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+
 
 class CoinsAdapter(private val getContext: Context,
-                   private val CustomLayoutId : Int,
-                   private val custom_item:ArrayList<customlayout>):
-        ArrayAdapter<customlayout>(getContext,CustomLayoutId,custom_item) {
+                   private val CustomLayoutId: Int,
+                   private val custom_item: ArrayList<customlayout>) :
+        ArrayAdapter<customlayout>(getContext, CustomLayoutId, custom_item) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var row = convertView
-
         val Holder: ViewHolder
+
         if (row == null) {
 
             val inflater = (getContext as Activity).layoutInflater
@@ -42,32 +38,28 @@ class CoinsAdapter(private val getContext: Context,
 
         Holder.img!!.setImageResource(item.image)
         Holder.txt!!.setText(item.wallet_coin.the_value)
-        row.setOnClickListener(){
-            if(row.background == null){
+        row.setOnClickListener {
+            if (row.background == null) {
                 row.setBackgroundResource(R.drawable.totem_plus)
-            }else{
+            } else {
                 row.setBackgroundResource(0)
             }
+            /** allow the user to set and cancel highlight */
 
 
-            if(!coins.temporary_list.isEmpty()) {
-                if (item.wallet_coin.currency != coins.temporary_list[0].currency) {
-                    coins.temporary_list.clear()
-                    coins.temporary_list.add(item.wallet_coin)
-                    Log.d("checkcrocodile",coins.temporary_list.size.toString())
-                }else if(coins.temporary_list.contains(item.wallet_coin)){
-                    coins.temporary_list.remove(item.wallet_coin)
-                    Log.d("checkcrocodile",coins.temporary_list.size.toString())
-                }else{
-                    coins.temporary_list.add(item.wallet_coin)
-                    Log.d("checktemp","hello")
-                    Log.d("checkcrocodile",coins.temporary_list.size.toString())
+            if (!CoinsObject.temporary_list.isEmpty()) {
+                if (item.wallet_coin.currency != CoinsObject.temporary_list[0].currency) {
+                    CoinsObject.temporary_list.clear()
+                    CoinsObject.temporary_list.add(item.wallet_coin)
+                } else if (CoinsObject.temporary_list.contains(item.wallet_coin)) {
+                    CoinsObject.temporary_list.remove(item.wallet_coin)
+                } else {
+                    CoinsObject.temporary_list.add(item.wallet_coin)
                 }
-            }else{
-                coins.temporary_list.add(item.wallet_coin)
-                Log.d("checkcrocodile",coins.temporary_list.size.toString())
+            } else {
+                CoinsObject.temporary_list.add(item.wallet_coin)
             }
-
+            /** this is used to count how manyand which coin the user has just choosed */
 
         }
 
@@ -78,8 +70,9 @@ class CoinsAdapter(private val getContext: Context,
 
 
     }
+
     class ViewHolder {
-        internal var img : ImageView? = null
-        internal var txt : TextView? = null
+        internal var img: ImageView? = null
+        internal var txt: TextView? = null
     }
 }

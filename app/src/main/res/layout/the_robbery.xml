@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".robbery">
+    tools:context=".robbery"
+    android:background="@drawable/war">
 
 
     <EditText
@@ -13,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="260dp"
         android:ems="10"
-        android:hint="insert your email"
+        android:hint="insert the email"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -3,51 +3,48 @@ package com.example.jiaozihang.coinz
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.GridView
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_third.*
 import kotlinx.android.synthetic.main.player_wallet.*
 
-class WalletActivity_frog : AppCompatActivity(){
+/** this page works the same way as WalletActivity_crocodile*/
+class WalletActivity_frog : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.player_wallet)
 
 
-
         val GV = this.findViewById(R.id.GV) as?  GridView
-        val adapter = CoinsAdapter(this,R.layout.coins_layout,data)
+        val adapter = CoinsAdapter(this, R.layout.coins_layout, data)
         GV?.adapter = adapter
 
         addbutton()
 
-        send_gift.setOnClickListener{
-            val intent = Intent(this,trade::class.java)
+        send_gift.setOnClickListener {
+            val intent = Intent(this, trade::class.java)
             startActivity(intent)
         }
     }
+
     fun addbutton() {
         to_bank.setOnClickListener {
-            if (coins.count > 0) {
-                Log.d("checkcrocodile", coins.wallet.size.toString())
-                coins.store_coins()
+            if (CoinsObject.count > 0) {
 
-                Log.d("checkcrocodile", coins.wallet.size.toString())
+                CoinsObject.store_coins()
+
 
 
 
                 setContentView(R.layout.player_wallet)
 
-                Log.d("checkthis", coins.wallet.size.toString())
+
                 val GV = this.findViewById(R.id.GV) as GridView
-                var renew_data = data
+                val renew_data = data
 
                 val adapter = CoinsAdapter(this, R.layout.coins_layout, renew_data)
                 GV.adapter = adapter
 
                 addbutton()
-                Log.d("checkthat", "no")
                 finish()
 
                 overridePendingTransition(0, 0)
@@ -62,22 +59,21 @@ class WalletActivity_frog : AppCompatActivity(){
     }
 
 
-    val data : ArrayList<customlayout>
-    get()
-    {
+    val data: ArrayList<customlayout>
+        get() {
 
-        val item_liste:ArrayList<customlayout> =  ArrayList<customlayout>()
+            val item_liste: ArrayList<customlayout> = ArrayList<customlayout>()
 
 
-        for(i in coins.wallet){
-            if(i.currency == "\"SHIL\""){
-                item_liste.add(customlayout(R.drawable.frogcoin,i))
+            for (i in CoinsObject.wallet) {
+                if (i.currency == "\"SHIL\"") {
+                    item_liste.add(customlayout(R.drawable.frogcoin, i))
 
+                }
             }
-        }
 
-        return item_liste
-    }
+            return item_liste
+        }
 
     public override fun onRestart() {
         super.onRestart()

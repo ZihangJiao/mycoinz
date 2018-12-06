@@ -32,7 +32,7 @@
         <activity android:name=".ThirdActivity" />
         <activity android:name=".WalletActivity" />
         <activity android:name=".WalletActivity_crocodile" />
-        <activity android:name=".WalletActivity_turtle" />
+        <activity android:name=".WalletActivityTurtle" />
         <activity android:name=".WalletActivity_frog" />
         <activity android:name=".WalletActivity_lizard" />
         <activity android:name=".Register" />

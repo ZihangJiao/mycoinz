@@ -30,12 +30,11 @@ import com.mapbox.mapboxsdk.plugins.locationlayer.modes.CameraMode
 import com.mapbox.mapboxsdk.plugins.locationlayer.modes.RenderMode
 import kotlinx.android.synthetic.main.activity_third.*
 import com.mapbox.mapboxsdk.annotations.IconFactory
-import org.json.JSONObject
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
-class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineListener, OnMapReadyCallback {
+class ThirdActivity : AppCompatActivity(), PermissionsListener
+        , LocationEngineListener, OnMapReadyCallback {
 
     private val tag = "ThirdActivity"
     private var mapView: MapView? = null
@@ -43,12 +42,17 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
     private lateinit var permissionManager: PermissionsManager
     private lateinit var originLocation: Location //store current location all time
     private lateinit var locationEngine: LocationEngine
-    private lateinit var locationLayerPlugin: LocationLayerPlugin//work with locationEngine to give a UI display to user
+    private lateinit var locationLayerPlugin: LocationLayerPlugin
+    //work with locationEngine to give a UI display to user
 
+
+    /** initialise the icon my markers, which represents different types of currency. */
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         val bundle: Bundle? = intent.extras
+
+
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_third)
@@ -59,49 +63,78 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
 
 
         var Month = LocalDateTime.now().monthValue.toString()
-            if(Month.length == 1){
-                Month = "0"+Month
-            }
+        if (Month.length == 1) {
+            Month = "0" + Month
+        }
         var Date = LocalDate.now().dayOfMonth.toString()
-            if(Date.length == 1){
-                Date = "0" + Date
-            }
+        if (Date.length == 1) {
+            Date = "0" + Date
+        }
 
-        DownloadFileTask(DownloadCompleteRunner).execute("http://homepages.inf.ed.ac.uk/stg/coinz/"+LocalDate.now().year.toString()+"/"+Month+"/"+Date+"/coinzmap.geojson")
+        DownloadFileTask(DownloadCompleteRunner)
+                .execute("http://homepages.inf.ed.ac.uk/stg/coinz/"
+                        + LocalDate.now().year.toString()
+                        + "/" + Month + "/" + Date + "/coinzmap.geojson")
 
 
         collect.setOnClickListener {
 
-            coins.pickupcoins(originLocation)
+            CoinsObject.pickupcoins(originLocation)
+            /** call the pickup CoinsObject function */
+
             map!!.clear()
-            for ( i in 0 .. (coins.the_coin.size -1)){
-                val lati1 = coins.the_coin[i].latitude
-                val long1 = coins.the_coin[i].longitude
-                val cur1 = coins.the_coin[i].currency
-                val value1 =coins.the_coin[i].the_value
+            /** clear all markers on the map, inorder to map them again without mapping those
+             * collected CoinsObject*/
 
-                val iconfrog = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_frog))
-                val iconlizard = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_lizard))
-                val iconturtle = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_turtle))
-                val iconcrocodile = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_crocodile_))
+            for (i in 0..(CoinsObject.the_coin.size - 1)) {
+                val lati1 = CoinsObject.the_coin[i].latitude
+                val long1 = CoinsObject.the_coin[i].longitude
+                val cur1 = CoinsObject.the_coin[i].currency
+                val value1 = CoinsObject.the_coin[i].the_value
+                val iconfrog = IconFactory
+                        .getInstance(this@ThirdActivity)
+                        .fromBitmap(getBitmapFromVectorDrawable
+                        (this@ThirdActivity, R.drawable.ic_frog))
 
+                val iconlizard = IconFactory
+                        .getInstance(this@ThirdActivity)
+                        .fromBitmap(getBitmapFromVectorDrawable
+                        (this@ThirdActivity, R.drawable.ic_lizard))
 
-                if(cur1 == "\"SHIL\"") {
-                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1).position(LatLng(lati1, long1)).icon(iconfrog))
+                val iconturtle = IconFactory
+                        .getInstance(this@ThirdActivity)
+                        .fromBitmap(getBitmapFromVectorDrawable
+                        (this@ThirdActivity, R.drawable.ic_turtle))
+
+                val iconcrocodile = IconFactory
+                        .getInstance(this@ThirdActivity)
+                        .fromBitmap(getBitmapFromVectorDrawable
+                        (this@ThirdActivity, R.drawable.ic_crocodile_))
+
+                if (cur1 == "\"SHIL\"") {
+                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1)
+                            .position(LatLng(lati1, long1)).icon(iconfrog))
                 }
-                if(cur1 == "\"DOLR\""){
-                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1).position(LatLng(lati1, long1)).icon(iconlizard))
+                if (cur1 == "\"DOLR\"") {
+                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1)
+                            .position(LatLng(lati1, long1)).icon(iconlizard))
                 }
-                if(cur1 == "\"QUID\""){
-                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1).position(LatLng(lati1, long1)).icon(iconturtle))
+                if (cur1 == "\"QUID\"") {
+                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1)
+                            .position(LatLng(lati1, long1)).icon(iconturtle))
                 }
-                if(cur1 == "\"PENY\""){
-                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1).position(LatLng(lati1, long1)).icon(iconcrocodile))
+                if (cur1 == "\"PENY\"") {
+                    map!!.addMarker(MarkerOptions().title(cur1).snippet(value1)
+                            .position(LatLng(lati1, long1)).icon(iconcrocodile))
                 }
+                /** check the currency of the coin, and set different icon to the marker. */
             }
 
-            if(coins.wallet.size == 100) {
-                Toast.makeText(this, "your wallet is full, store some coins in to the bank!", Toast.LENGTH_SHORT).show()
+            if (CoinsObject.wallet.size == 100) {
+                Toast.makeText(this,
+                        "your wallet is full, store some CoinsObject in to the bank!",
+                        Toast.LENGTH_SHORT).show()
+                /** remind user when their wallet is full and can not collect anymore */
             }
         }
 
@@ -148,65 +181,77 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
             enableLocation()
         }
 
-        Log.d("Tag",DownloadCompleteRunner.rate_dolr.toString())
-        Log.d("Tag",DownloadCompleteRunner.rate_peny.toString())
-        Log.d("Tag",DownloadCompleteRunner.rate_quid.toString())
-        Log.d("Tag",DownloadCompleteRunner.rate_shil.toString())
-
-        for ( i in  FeatureCollection.fromJson(DownloadCompleteRunner.result).features()!!){
-            val long = i.geometry().toString().substringAfter("[").substringBefore(",").toDouble()
-            val lati = i.geometry().toString().substringAfter("[").substringAfter(",").substringBefore("]").toDouble()
+        for (i in FeatureCollection.fromJson(DownloadCompleteRunner.result).features()!!) {
+            val long = i.geometry().toString()
+                    .substringAfter("[")
+                    .substringBefore(",").toDouble()
+            val lati = i.geometry().toString()
+                    .substringAfter("[")
+                    .substringAfter(",")
+                    .substringBefore("]").toDouble()
             val cur = i.properties()!!["currency"].toString()
             val value = i.properties()!!["value"].toString()
             val ID = i.properties()!!["id"].toString()
-
-
+            /** read the dowaloaded file and read the information stored in it. */
 
 
             var checker = 0
 
-           Log.d("check1",coins.coin_collected_today.size.toString())
-            for(i in coins.coin_collected_today){
-                if (i == ID){
+            for (i in CoinsObject.coin_collected_today) {
+                if (i == ID) {
                     checker = 1
                     break
                 }
             }
 
-            if(checker == 1){
-                checker = 0
+            if (checker == 1) {
                 continue
             }
-
-            Log.d("check1","whatttt")
+            /** set a checker, if the coin in the loop is same as the coin the user have collected,
+             * skip the marker adding step and go to the next loop */
 
             val loc = Location("")
             loc.latitude = lati
             loc.longitude = long
+            val iconfrog = IconFactory
+                    .getInstance(this@ThirdActivity)
+                    .fromBitmap(getBitmapFromVectorDrawable
+                    (this@ThirdActivity, R.drawable.ic_frog))
 
-            coins.the_coin.add(Coin(cur,value,lati,long,ID))
-            val iconfrog = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_frog))
-            val iconlizard = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_lizard))
-            val iconturtle = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_turtle))
-            val iconcrocodile = IconFactory.getInstance(this@ThirdActivity).fromBitmap(getBitmapFromVectorDrawable(this@ThirdActivity,R.drawable.ic_crocodile_))
+            val iconlizard = IconFactory
+                    .getInstance(this@ThirdActivity)
+                    .fromBitmap(getBitmapFromVectorDrawable
+                    (this@ThirdActivity, R.drawable.ic_lizard))
 
+            val iconturtle = IconFactory
+                    .getInstance(this@ThirdActivity)
+                    .fromBitmap(getBitmapFromVectorDrawable
+                    (this@ThirdActivity, R.drawable.ic_turtle))
 
+            val iconcrocodile = IconFactory
+                    .getInstance(this@ThirdActivity)
+                    .fromBitmap(getBitmapFromVectorDrawable
+                    (this@ThirdActivity, R.drawable.ic_crocodile_))
 
+            CoinsObject.the_coin.add(Coin(cur, value, lati, long, ID))
 
-
-            if(cur == "\"SHIL\"") {
-                map!!.addMarker(MarkerOptions().title(cur).snippet(value).position(LatLng(lati, long)).icon(iconfrog))
+            if (cur == "\"SHIL\"") {
+                map!!.addMarker(MarkerOptions().title(cur).snippet(value)
+                        .position(LatLng(lati, long)).icon(iconfrog))
             }
-            if(cur == "\"DOLR\""){
-                map!!.addMarker(MarkerOptions().title(cur).snippet(value).position(LatLng(lati, long)).icon(iconlizard))
+            if (cur == "\"DOLR\"") {
+                map!!.addMarker(MarkerOptions().title(cur).snippet(value)
+                        .position(LatLng(lati, long)).icon(iconlizard))
             }
-            if(cur == "\"QUID\""){
-                map!!.addMarker(MarkerOptions().title(cur).snippet(value).position(LatLng(lati, long)).icon(iconturtle))
+            if (cur == "\"QUID\"") {
+                map!!.addMarker(MarkerOptions().title(cur).snippet(value)
+                        .position(LatLng(lati, long)).icon(iconturtle))
             }
-            if(cur == "\"PENY\""){
-                map!!.addMarker(MarkerOptions().title(cur).snippet(value).position(LatLng(lati, long)).icon(iconcrocodile))
+            if (cur == "\"PENY\"") {
+                map!!.addMarker(MarkerOptions().title(cur).snippet(value)
+                        .position(LatLng(lati, long)).icon(iconcrocodile))
             }
-
+            /** add this coin to a list and coin, and add a marker for it on the map */
         }
 
     }
@@ -257,20 +302,21 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
             }
         }
     }
-    private fun getBitmapFromVectorDrawable(context : Context, drawableId : Int): Bitmap {
-    var drawable = ContextCompat.getDrawable(context, drawableId)!!
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-        drawable = (wrap(drawable)).mutate()
+
+    private fun getBitmapFromVectorDrawable(context: Context, drawableId: Int): Bitmap {
+        var drawable = ContextCompat.getDrawable(context, drawableId)!!
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (wrap(drawable)).mutate()
+        }
+
+        var bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888)
+        var canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
+        drawable.draw(canvas)
+
+        return bitmap
     }
-
-    var bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-            drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888)
-    var canvas =  Canvas(bitmap)
-    drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
-    drawable.draw(canvas)
-
-    return bitmap
-}
 
 
     private fun setCameraPosition(location: Location) {
@@ -282,8 +328,6 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener, LocationEngineLi
         super.onStart()
         mapView?.onStart()
     }
-
-
 
 
 }
