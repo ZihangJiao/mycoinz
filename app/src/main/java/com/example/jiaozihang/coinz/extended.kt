@@ -25,7 +25,7 @@ object DownloadCompleteRunner : DownloadCompleteListener {
     }
 
     fun setup(){
-        Log.d("Tag1",DownloadCompleteRunner.json.toString())
+//        Log.d("Tag1",DownloadCompleteRunner.json.toString())
         val rates =DownloadCompleteRunner!!.json.get("rates").toString()
         val numberOnly = rates.replace("[^0-9\\.]+", " ")
         //val rs = numberOnly.split("\\s")

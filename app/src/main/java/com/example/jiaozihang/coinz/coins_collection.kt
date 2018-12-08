@@ -1,6 +1,7 @@
 package com.example.jiaozihang.coinz
 
 import android.location.Location
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.time.LocalDateTime
@@ -74,6 +75,7 @@ object CoinsObject {
         }
         /** temporary_list stores the selected CoinsObject of the user */
         for (i in coins_to_remove) {
+            Log.d("check",DownloadCompleteRunner.rate_peny.toString())
             if (i.currency == "\"PENY\"") {
                 Bank += (i.the_value.drop(1)
                         .dropLast(1).toDouble() * DownloadCompleteRunner.rate_peny)

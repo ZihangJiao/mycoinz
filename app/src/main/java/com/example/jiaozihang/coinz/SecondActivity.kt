@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ValueEventListener
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 class SecondActivity : AppCompatActivity() {
@@ -22,7 +23,22 @@ class SecondActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
+        var Month = LocalDateTime.now().monthValue.toString()
+        if (Month.length == 1) {
+            Month = "0" + Month
+        }
+        var Date = LocalDate.now().dayOfMonth.toString()
+        if (Date.length == 1) {
+            Date = "0" + Date
+        }
+        DownloadFileTask(DownloadCompleteRunner)
+                .execute("http://homepages.inf.ed.ac.uk/stg/coinz/"
+                        + LocalDate.now().year.toString()
+                        + "/" + Month + "/" + Date + "/coinzmap.geojson")
+
+
         initData()
+        DownloadCompleteRunner
 
 
         image_Map.setOnClickListener {

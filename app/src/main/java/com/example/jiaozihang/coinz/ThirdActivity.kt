@@ -62,19 +62,19 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener
         mapView?.getMapAsync(this)
 
 
-        var Month = LocalDateTime.now().monthValue.toString()
-        if (Month.length == 1) {
-            Month = "0" + Month
-        }
-        var Date = LocalDate.now().dayOfMonth.toString()
-        if (Date.length == 1) {
-            Date = "0" + Date
-        }
-
-        DownloadFileTask(DownloadCompleteRunner)
-                .execute("http://homepages.inf.ed.ac.uk/stg/coinz/"
-                        + LocalDate.now().year.toString()
-                        + "/" + Month + "/" + Date + "/coinzmap.geojson")
+//        var Month = LocalDateTime.now().monthValue.toString()
+//        if (Month.length == 1) {
+//            Month = "0" + Month
+//        }
+//        var Date = LocalDate.now().dayOfMonth.toString()
+//        if (Date.length == 1) {
+//            Date = "0" + Date
+//        }
+//
+//        DownloadFileTask(DownloadCompleteRunner)
+//                .execute("http://homepages.inf.ed.ac.uk/stg/coinz/"
+//                        + LocalDate.now().year.toString()
+//                        + "/" + Month + "/" + Date + "/coinzmap.geojson")
 
 
         collect.setOnClickListener {
@@ -327,6 +327,11 @@ class ThirdActivity : AppCompatActivity(), PermissionsListener
     public override fun onStart() {
         super.onStart()
         mapView?.onStart()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        permissionManager.onRequestPermissionsResult(requestCode,permissions,grantResults)
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
 
